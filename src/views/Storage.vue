@@ -1,15 +1,25 @@
 <template>
   <div class="home">
-        <div v-for="(product) in products" :key="product.id" >
-            <h5>image =  {{product.image}} </h5>
-            <h5>name =  {{product.name}} </h5>
-            <h5>price = <button>-</button>   {{product.price}}    </h5>
-            <h5>count =  <button v-on:click="this.updateCountProduct(product.id, '-' )">-1</button>
-               {{product.count}}  <button v-on:click="this.updateCountProduct(product.id, '+' )">+1</button>
-               <a :href="`/StorageAdd/${product.id}`"> EDIT </a>
-             </h5>
 
-            <h5>category_id =  {{product.category}} </h5>
+          <table align="center" width="50%" cellspacing="0" border="1">
+               <tr>
+                <th>image</th>
+                <th>name</th>
+                <th>price</th>
+                <th >count</th>
+               </tr>
+         </table>
+
+
+        <div align="center" width="50%" v-for="(product) in products" :key="product.id" >
+            <td>{{product.image}}
+             {{product.name}}
+             {{product.price}}
+               <button v-on:click="this.updateCountProduct(product.id, '-' )">-1</button>
+               {{product.count}}
+               <button v-on:click="this.updateCountProduct(product.id, '+' )">+1</button>
+               <a :href="`/StorageAdd/${product.id}`"> EDIT </a>
+             </td>
        </div>
 
   </div>
@@ -32,7 +42,7 @@ export default {
            count: 1,
            operation: symbol
        }} )
-      .then(response => (this.categories = response.data.category));
+
     }
     },
     mounted() {

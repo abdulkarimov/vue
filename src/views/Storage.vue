@@ -7,20 +7,21 @@
                 <th>name</th>
                 <th>price</th>
                 <th >count</th>
+                <th >edit</th>
                </tr>
+
+
+        <tr align="center" width="50%" v-for="(product) in products" :key="product.id">
+            <td>{{product.image}}</td>
+             <td>{{product.name}}</td>
+             <td>{{product.price}}</td>
+             <td>  <button v-on:click="this.updateCountProduct(product.id, '-' )">-1</button>
+              {{product.count}}
+              <button v-on:click="this.updateCountProduct(product.id, '+' )">+1</button></td>
+              <td><a :href="`/Store/${product.id}`"> EDIT </a></td>
+
+             </tr>
          </table>
-
-
-        <div align="center" width="50%" v-for="(product) in products" :key="product.id" >
-            <td>{{product.image}}
-             {{product.name}}
-             {{product.price}}
-               <button v-on:click="this.updateCountProduct(product.id, '-' )">-1</button>
-               {{product.count}}
-               <button v-on:click="this.updateCountProduct(product.id, '+' )">+1</button>
-               <a :href="`/StorageAdd/${product.id}`"> EDIT </a>
-             </td>
-       </div>
 
   </div>
 </template>

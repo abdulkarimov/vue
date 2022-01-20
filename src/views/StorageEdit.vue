@@ -1,7 +1,6 @@
 <template>
        <div>
-                 <label for="productfile">Upload file:</label>
-    <input type="file" ref="file" id="productfile" name="productfile">
+                 <input name="myFile" type="file">
 
        <div>
                 <label for="name">Name:</label>
@@ -25,8 +24,9 @@
                 </select>
        </div>
        <div>
+           <form>
                 <button v-on:click="this.saveEditions(product.name, product.price, product.count,product.category)">SAVE</button>
-
+            </form>
        </div>
 
   </div>
@@ -48,32 +48,14 @@ export default {
       .then(response => (this.product = response.data[0]));
     },
      saveEditions(newName,newPrice,newCount,newCategory) {
-         const formData = new FormData();
-         formData.append('file', this.$refs.file.files[0]);
-         const headers = { 'Content-Type': 'multipart/form-data' };
-         axios.post('http://127.0.0.1:8000/api/getFile/',formData,{ headers } ).then(response => {console.log(response)
-                 if(this.$route.params.id){
-                     axios.put('http://127.0.0.1:8000/api/storage/' + this.$route.params.id,{
-                          Product:{
-                               image: response.data.photo,
-                               name: newName,
-                               price: newPrice,
-                               count: newCount,
-                               category_id:newCategory
-                           }} )
-
-                 } else {
-                     axios.post('http://127.0.0.1:8000/api/storage/',{
-                      Product:{
-                           image: response.data.photo,
-                           name: newName,
-                           price: newPrice,
-                           count: newCount,
-                           category_id:newCategory
-                      }} )
-                 }
-              });
-     }
+     axios.put('http://127.0.0.1:8000/api/storage/' + this.$route.params.id,{
+          Product:{
+               name: newName,
+               price: newPrice,
+               count: newCount,
+               category_id:newCategory
+           }} )
+    }
 
     },
     mounted () {

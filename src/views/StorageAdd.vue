@@ -1,7 +1,13 @@
 <template>
        <div>
-                 <label for="productfile">Upload file:</label>
-    <input type="file" ref="file" id="productfile" name="productfile">
+                 <label v-if="!product.id"  for="productfile">Upload file:</label>
+                 <input v-if="!product.id" type="file" ref="file" id="productfile" name="productfile"  @change="previewImage">
+                 <div class="image-preview" v-if="imageData.length > 0">
+                    <img class="preview" :src="imageData">
+                 </div>
+                 <div class="image-preview" v-if=" product.id > 0 " >
+                    <img class="preview" :src=this.imagee>
+                 </div>
 
        <div>
                 <label for="name">Name:</label>
@@ -37,15 +43,33 @@ import axios from 'axios';
 export default {
  data: function () {
   return {
-       product: {},
+    imageData: "" ,
+    product: {},
     categories: {},
     productID: this.$route.params.id,
+    imagee: null
+
   }
 },
     methods : {
+
+
+     previewImage: function(event) {
+            var input = event.target;
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = (e) => {
+                    this.imageData = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+            },
+
     getProduct(id){
         axios.get('http://127.0.0.1:8000/api/getProductByID/'+this.$route.params.id)
       .then(response => (this.product = response.data[0]));
+
+      this.imagee="'http://localhost:8000/api/getImage/' + product.image"
     },
      saveEditions(newName,newPrice,newCount,newCategory) {
          const formData = new FormData();
@@ -78,9 +102,8 @@ export default {
     },
     mounted () {
            this.getProduct(this.productID)
+           axios.get('http://127.0.0.1:8000/api/category/').then(response => (this.categories = response.data.category));
 
-           axios.get('http://127.0.0.1:8000/api/category/')
-           .then(response => (this.categories = response.data.category));
 
   },
 

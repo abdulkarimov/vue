@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Storage from '../views/Storage.vue'
 import StorageAdd from '../views/StorageAdd.vue'
-//import StorageEdit from '../views/StorageEdit.vue'
+import ProductDelete from '../views/ProductDelete.vue'
 
 const routes = [
   {
@@ -13,6 +13,11 @@ const routes = [
     path: '/store/:id',
     name: 'StorageAdd',
     component: StorageAdd
+  },
+    {
+    path: '/ProductDelete/:id',
+    name: 'ProductDelete',
+    component: ProductDelete
   },
   {
     path: '/store/',

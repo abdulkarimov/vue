@@ -1,12 +1,14 @@
 <template>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
        <div>
                  <label v-if="!product.id"  for="productfile">Upload file:</label>
                  <input v-if="!product.id" type="file" ref="file" id="productfile" name="productfile"  @change="previewImage">
                  <div class="image-preview" v-if="imageData.length > 0">
-                    <img class="preview" :src="imageData">
+                    <img :src="imageData" class="rounded mx-auto d-block" alt="...">
                  </div>
                  <div class="image-preview" v-if=" product.id > 0 " >
-                    <img class="preview" :src=this.imagee>
+                    <img class="preview" :src="'http://localhost:8000/api/getImage/' + product.image" >
                  </div>
 
        <div>
@@ -31,8 +33,7 @@
                 </select>
        </div>
        <div>
-                <button v-on:click="this.saveEditions(product.name, product.price, product.count,product.category)">SAVE</button>
-
+                <button v-on:click="this.saveEditions(product.image, product.name, product.price, product.count,product.category)">SAVE</button>
        </div>
 
   </div>
@@ -47,12 +48,12 @@ export default {
     product: {},
     categories: {},
     productID: this.$route.params.id,
-    imagee: null
-
   }
 },
     methods : {
-
+    redirectTo(url){
+           window.location=url
+         },
 
      previewImage: function(event) {
             var input = event.target;
@@ -66,46 +67,46 @@ export default {
             },
 
     getProduct(id){
-        axios.get('http://127.0.0.1:8000/api/getProductByID/'+this.$route.params.id)
-      .then(response => (this.product = response.data[0]));
-
-      this.imagee="'http://localhost:8000/api/getImage/' + product.image"
+        axios.get('http://127.0.0.1:8000/api/getProductByID/'+this.$route.params.id).then(response => (this.product = response.data[0]));
     },
-     saveEditions(newName,newPrice,newCount,newCategory) {
-         const formData = new FormData();
-         formData.append('file', this.$refs.file.files[0]);
-         const headers = { 'Content-Type': 'multipart/form-data' };
-         axios.post('http://127.0.0.1:8000/api/getFile/',formData,{ headers } ).then(response => {console.log(response)
-                 if(this.$route.params.id){
+        saveEditions(image,newName,newPrice,newCount,newCategory) {
+          if(this.$route.params.id){
                      axios.put('http://127.0.0.1:8000/api/storage/' + this.$route.params.id,{
                           Product:{
-                               image: response.data.photo,
+                               image: image,
                                name: newName,
                                price: newPrice,
                                count: newCount,
                                category_id:newCategory
-                           }} )
+                           }})
 
-                 } else {
-                     axios.post('http://127.0.0.1:8000/api/storage/',{
-                      Product:{
-                           image: response.data.photo,
-                           name: newName,
-                           price: newPrice,
-                           count: newCount,
-                           category_id:newCategory
-                      }} )
-                 }
-              });
-     }
+                           this.redirectTo("http://localhost:8080/")
+                           }
 
-    },
-    mounted () {
+         else {
+                const formData = new FormData();
+                formData.append('file', this.$refs.file.files[0]);
+                const headers = { 'Content-Type': 'multipart/form-data' };
+
+                axios.post('http://127.0.0.1:8000/api/getFile/',formData,{ headers } ).then(response => {console.log(response)
+                axios.post('http://127.0.0.1:8000/api/storage/',{
+                                Product:{
+                                       image: response.data.photo,
+                                       name: newName,
+                                       price: newPrice,
+                                       count: newCount,
+                                       category_id:newCategory
+                                       }})})
+                    this.redirectTo("http://localhost:8080/")
+
+}
+}
+},
+           mounted () {
            this.getProduct(this.productID)
            axios.get('http://127.0.0.1:8000/api/category/').then(response => (this.categories = response.data.category));
 
-
-  },
+           },
 
 }
 </script>

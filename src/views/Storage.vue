@@ -6,39 +6,49 @@
 <body>
   <div class="home">
 
-            <table class="table table-bordered mytbl" >
-              <thead>
-                <tr>
+<table class="table">
+
+
+              <thead class="table-light">
+                <tr >
                   <th scope="col">#</th>
                   <th scope="col">image</th>
                   <th scope="col">name</th>
                   <th scope="col">price</th>
-                  <th scope="col">count</th>
+                  <th  scope="col">count</th>
                   <th scope="col">edit</th>
+                  <th scope="col">delete</th>
                 </tr>
               </thead>
 
-
 <tbody>
-    <tr  v-for="(product) in products" :key="product.id" >
+
+
+     <tr  v-for="(product) in products" :key="product.id" >
       <th scope="row">{{product.id}}</th>
-             <td>
+             <td  >
             <img :src="'http://localhost:8000/api/getImage/' + product.image"  style="width:90%;">
             </td>
              <td>{{product.name}}</td>
              <td>{{product.price}}</td>
-             <td>  <button v-on:click="this.updateCountProduct(product.id, '-' )">-1</button>
+              <td colspan="4">
+         <button v-on:click="this.updateCountProduct(product.id, '-' , product.count , product.name)">-1</button>
               {{product.count}}
-              <button v-on:click="this.updateCountProduct(product.id, '+' )">+1</button></td>
+              <button v-on:click="this.updateCountProduct(product.id, '+' , product.count , product.name)">+1</button></td>
               <td><a :href="`/Store/${product.id}`"> EDIT </a></td>
+              <td><a :href="`/ProductDelete/${product.id}`"> DELETE </a></td>
 
-</tr>
+        </tr>
+
+
+
 
  </tbody>
 
 </table>
-
   </div>
+
+
   </body>
   </html>
 </template>
@@ -52,18 +62,19 @@ export default {
   }
 },
  methods : {
-       updateCountProduct(id,symbol) {
-        axios.post('http://127.0.0.1:8000/api/updateCount/'+ id , {
-          Product:{
-               count: 1,
-               operation: symbol
-           }} )
-
-    }
-
-
-
-
+       updateCountProduct(id,symbol,count,name) {
+            if(count > 0){
+                if(count < 5){
+                    axios.post('http://127.0.0.1:7000/api/notifications/',{
+                        "notification":{
+                            "params":{"name":name},
+                            "sendMethodID_id": 2,
+                            "templateID_id": 1
+                            }
+                    })}
+                    axios.post('http://127.0.0.1:8000/api/updateCount/'+ id , {Product:{count: 1,operation: symbol}})
+            }
+       }
     },
     mounted() {
     axios.get('http://127.0.0.1:8000/api/storage/')
@@ -71,19 +82,3 @@ export default {
   }
 }
 </script>
-  <style type="text/css">
-.mytbl,
-.mytbl tr th,
-.mytbl tr td {
-  border-style: solid;
-  border-color: #000;
-  border-spacing: 0;
-  border-collapse: collapse;
-  padding: 4px;
-  border-width: 1px;
-  font: 12px helvetica,arial,sans-serif;
-}
-.mytbl tr td {
-width: 25%;
-}
-</style>

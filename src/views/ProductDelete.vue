@@ -26,7 +26,7 @@ export default {
                         "notification":{
                             "params":{"name":name},
                             "sendMethodID_id": 2,
-                            "templateID_id": 2
+                            "templateID_id": 5
                             }
                     })
 

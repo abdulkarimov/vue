@@ -5,21 +5,31 @@
 </head>
 <body>
   <div class="home">
-  <h1  class="display-5 mb-4">Productions</h1>
+ <h1  class="display-5 mb-4">Productions</h1>
 
-<table class="table table-bordered">
+<table class="table ">
+<thead>
 
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">image</th>
+      <th scope="col">name</th>
+      <th scope="col">power</th>
+      <th scope="col">count</th>
+      <th scope="col">edit</th>
+      <th scope="col">delete</th>
+    </tr>
+  </thead>
 <tbody>
-
 
      <tr  v-for="(product, index) in products" :key="product.id" >
       <th scope="row">{{product.id}}</th>
              <td  >
-            <img :src="'http://localhost:8000/api/getImage/' + product.image"  >
+            <img style= 'height: 90px' :src="'https://a3d2-92-47-56-42.ngrok.io/api/getImage/' + product.image"  >
             </td>
              <td>{{product.name}}</td>
              <td>{{product.price}}</td>
-              <td colspan="4">
+              <td >
                 <button class = "buttonSymbol minus" v-on:click="this.updateCountProduct(product.id, '-' , product.count , product.name, index)">
                 -
                 </button>
@@ -46,9 +56,6 @@
 
         </tr>
 
-
-
-
  </tbody>
 
 </table>
@@ -64,34 +71,37 @@ import axios from 'axios';
 export default {
  data: function () {
   return {
+
+
     products: {}
   }
 },
  methods : {
        updateCountProduct(id,symbol,count,name, index) {
-            if(symbol === '+')
-                 this.products[index].count = this.products[index].count + 1
-            else
-                this.products[index].count = this.products[index].count - 1
-
 
 
             console.log(this.products[index].count);
             if(count >= 0){
+
                 if(count <= 5){
-                    axios.post('http://127.0.0.1:7000/api/notifications/',{
+                    axios.post('https://5b25-92-47-56-42.ngrok.io/api/notifications/',{
                         "notification":{
                             "params":{"name":name},
                             "sendMethodID_id": 2,
-                            "templateID_id": 6
+                            "templateID_id": 3
                             }
                     })}
-                    axios.post('http://127.0.0.1:8000/api/updateCount/'+ id , {Product:{count: 1,operation: symbol}})
+                    axios.post('https://a3d2-92-47-56-42.ngrok.io/api/updateCount/'+ id , {Product:{count: 1,operation: symbol}})
+                    .then(response => {this.redirectTo("/")})
+
             }
        }
+       , redirectTo(url){
+           window.location=url
+         }
     },
     mounted() {
-    axios.get('http://127.0.0.1:8000/api/storage/')
+    axios.get('https://a3d2-92-47-56-42.ngrok.io/api/storage/')
       .then(response => (this.products = response.data.Product));
   }
 }
@@ -115,4 +125,6 @@ background: white;
     border-color: white;
     background: green;
 }
+
+*{font-size:9px}
 </style>

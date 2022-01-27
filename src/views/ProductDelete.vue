@@ -6,7 +6,7 @@
                 <h1>{{this.product.name}}</h1>
 
                 <button v-on:click="this.delette(this.product.name)" type="button" class="btn btn-danger">YES</button>
-                <button  @click="redirectTo('http://localhost:8080/')"  type="button" class="btn btn-primary">NO</button>
+                <button  @click="redirectTo('/')"  type="button" class="btn btn-primary">NO</button>
 
         </div>
 </template>
@@ -21,26 +21,24 @@ export default {
 },
     methods : {
         delette(name){
-                 axios.delete('http://127.0.0.1:8000/api/storage/' + this.product.id)
-                 axios.post('http://127.0.0.1:7000/api/notifications/',{
+                 axios.delete('https://a3d2-92-47-56-42.ngrok.io/api/storage/' + this.product.id)
+                 axios.post('https://5b25-92-47-56-42.ngrok.io/api/notifications/',{
                         "notification":{
                             "params":{"name":name},
                             "sendMethodID_id": 2,
-                            "templateID_id": 5
+                            "templateID_id": 4,
                             }
-                    })
+                    }).then(response => {this.redirectTo("/")})
 
-                 this.redirectTo("http://localhost:8080/")
+
 
        },
 
-         redirectTo(url){
-           window.location=url
-         }
+
 
     },
  mounted() {
-      axios.get('http://127.0.0.1:8000/api/getProductByID/'+this.$route.params.id)
+      axios.get('https://a3d2-92-47-56-42.ngrok.io/api/getProductByID/'+this.$route.params.id)
       .then(response => (this.product = response.data[0]));
   },
 

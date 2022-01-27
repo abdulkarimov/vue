@@ -8,7 +8,7 @@
                     <img :src="imageData" class="rounded mx-auto d-block" alt="...">
                  </div>
                  <div class="image-preview" v-if=" product.id > 0 " >
-                    <img class="preview" :src="'http://localhost:8000/api/getImage/' + product.image" >
+                    <img class="preview" :src="'https://a3d2-92-47-56-42.ngrok.io/api/getImage/' + product.image" >
                  </div>
 
        <div>
@@ -71,7 +71,7 @@ export default {
     },
         saveEditions(image,newName,newPrice,newCount,newCategory) {
           if(this.$route.params.id){
-                     axios.put('http://127.0.0.1:8000/api/storage/' + this.$route.params.id,{
+                     axios.put('https://a3d2-92-47-56-42.ngrok.io/api/storage/' + this.$route.params.id,{
                           Product:{
                                image: image,
                                name: newName,
@@ -80,7 +80,7 @@ export default {
                                category_id:newCategory
                            }})
 
-                           this.redirectTo("http://localhost:8080/")
+                           this.redirectTo("/")
                            }
 
          else {
@@ -88,23 +88,23 @@ export default {
                 formData.append('file', this.$refs.file.files[0]);
                 const headers = { 'Content-Type': 'multipart/form-data' };
 
-                axios.post('http://127.0.0.1:8000/api/getFile/',formData,{ headers } ).then(response => {console.log(response)
-                axios.post('http://127.0.0.1:8000/api/storage/',{
+                axios.post('https://a3d2-92-47-56-42.ngrok.io/api/getFile/',formData,{ headers } ).then(response => {console.log(response)
+                axios.post('https://a3d2-92-47-56-42.ngrok.io/api/storage/',{
                                 Product:{
                                        image: response.data.photo,
                                        name: newName,
                                        price: newPrice,
                                        count: newCount,
                                        category_id:newCategory
-                                       }})})
-                    this.redirectTo("http://localhost:8080/")
+                                       }}).then(response => {this.redirectTo("/")} ) })
+
 
 }
 }
 },
            mounted () {
            this.getProduct(this.productID)
-           axios.get('http://127.0.0.1:8000/api/category/').then(response => (this.categories = response.data.category));
+           axios.get('https://a3d2-92-47-56-42.ngrok.io/api/category/').then(response => (this.categories = response.data.category));
 
            },
 

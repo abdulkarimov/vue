@@ -14,7 +14,7 @@
       <th scope="col">#</th>
       <th scope="col">image</th>
       <th scope="col">name</th>
-      <th scope="col">power</th>
+      <th scope="col">price</th>
       <th scope="col">count</th>
       <th scope="col">edit</th>
       <th scope="col">delete</th>
@@ -25,7 +25,7 @@
      <tr  v-for="(product, index) in products" :key="product.id" >
       <th scope="row">{{product.id}}</th>
              <td  >
-            <img style= 'height: 90px' :src="'https://a3d2-92-47-56-42.ngrok.io/api/getImage/' + product.image"  >
+            <img style= 'height: 90px' :src="'http://127.0.0.1:8000/api/getImage/' + product.image"  >
             </td>
              <td>{{product.name}}</td>
              <td>{{product.price}}</td>
@@ -84,14 +84,14 @@ export default {
             if(count >= 0){
 
                 if(count <= 5){
-                    axios.post('https://5b25-92-47-56-42.ngrok.io/api/notifications/',{
+                    axios.post('http://127.0.0.1:7000/api/notifications/',{
                         "notification":{
                             "params":{"name":name},
                             "sendMethodID_id": 2,
-                            "templateID_id": 3
+                            "templateID_id": 6
                             }
                     })}
-                    axios.post('https://a3d2-92-47-56-42.ngrok.io/api/updateCount/'+ id , {Product:{count: 1,operation: symbol}})
+                    axios.post('http://127.0.0.1:8000/api/updateCount/'+ id , {Product:{count: 1,operation: symbol}})
                     .then(response => {this.redirectTo("/")})
 
             }
@@ -101,7 +101,7 @@ export default {
          }
     },
     mounted() {
-    axios.get('https://a3d2-92-47-56-42.ngrok.io/api/storage/')
+    axios.get('http://127.0.0.1:8000/api/storage/')
       .then(response => (this.products = response.data.Product));
   }
 }

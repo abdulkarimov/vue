@@ -20,25 +20,22 @@ export default {
 }
 },
     methods : {
+       redirectTo(url){
+           window.location=url
+         },
         delette(name){
-                 axios.delete('https://a3d2-92-47-56-42.ngrok.io/api/storage/' + this.product.id)
-                 axios.post('https://5b25-92-47-56-42.ngrok.io/api/notifications/',{
+                 axios.delete('http://127.0.0.1:8000/api/storage/' + this.product.id)
+                 axios.post('http://127.0.0.1:7000/api/notifications/',{
                         "notification":{
                             "params":{"name":name},
                             "sendMethodID_id": 2,
-                            "templateID_id": 4,
+                            "templateID_id": 5,
                             }
                     }).then(response => {this.redirectTo("/")})
-
-
-
        },
-
-
-
     },
  mounted() {
-      axios.get('https://a3d2-92-47-56-42.ngrok.io/api/getProductByID/'+this.$route.params.id)
+      axios.get('http://127.0.0.1:8000/api/getProductByID/'+this.$route.params.id)
       .then(response => (this.product = response.data[0]));
   },
 
